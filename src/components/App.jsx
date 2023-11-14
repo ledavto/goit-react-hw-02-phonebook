@@ -15,64 +15,56 @@ export class App extends Component {
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
     filter: '',
-    name: '',
-    number: '',
   };
 
-  handleSubmit = e => {
-    e.preventDefault();
+  addContacts = newCont => {
+    // if (newCont.name ===) alert()
+    //includes(value);
+
+    const contObj = { id: nanoid(), ...newCont };
 
     this.setState(prev => {
-      const oldState = [...prev.contacts];
-      oldState.push({
-        id: nanoid(),
-        name: e.target.name.value,
-        number: e.target.number.value,
-      });
+      //Массив имен из объекта
+      const arrName = [];
+      for (const contacts of prev.contacts) {
+        arrName.push(contacts.name);
+      }
+
+      //Проверка на наличие уже такого имени
+      if (arrName.includes(newCont.name)) {
+        alert(`${newCont.name} is already in contacts`);
+        return;
+      }
+
       return {
-        contacts: oldState,
+        contacts: [...prev.contacts, contObj],
       };
     });
   };
 
-  handleFilter = e => {
-    const filterText = e.target.value;
-    this.setState({ filter: filterText });
+  filterContacts = e => {
+    //console.log(e);
+    this.setState({ filter: e });
+  };
+
+  deleteCont = id => {
+    this.setState(prev => ({
+      contacts: prev.contacts.filter(el => el.id !== id),
+    }));
   };
 
   render() {
     return (
-      <div>
+      <div className="container">
         <h1>Phonebook</h1>
-        <ContactForm onleaveSubmit={this.handleSubmit} />
-        {/* <h2>Contacts</h2>
-        <Filter />
-        <ContactList /> */}
-
-        <ul>
-          <h3>Contacts</h3>
-          <div className="mb-3">
-            <label htmlFor="exampleFormControlInput1" className="form-label">
-              Find contact by name
-              <input
-                type="text"
-                name="filter"
-                className="form-control"
-                id="exampleFormControlInput3"
-                onChange={this.handleFilter}
-              />
-            </label>
-          </div>
-          {this.state.contacts
-            .filter(item =>
-              item.name.toLowerCase().includes(this.state.filter.toLowerCase())
-            )
-            .map(elem => (
-              <li key={elem.id}>
-                {elem.name} - {elem.number}
-              </li>
-            ))}
-        </ul>
+        <ContactForm addCont={this.addContacts} />
+        <h2>Contacts</h2>
+        <Filter filterStr={this.filterContacts} />
+        <ContactList
+          listCont={this.state.contacts}
+          filter={this.state.filter}
+          deleteCont={this.deleteCont}
+        />
       </div>
     );
   }

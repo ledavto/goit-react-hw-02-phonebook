@@ -1,9 +1,23 @@
 import { Component } from 'react';
 
 export class ContactForm extends Component {
+  state = {
+    name: '',
+    number: '',
+  };
+
+  handleSubmit = e => {
+    e.preventDefault();
+    this.props.addCont(this.state);
+  };
+
+  handleChange = ({ target: { name, value } }) => {
+    this.setState({ [name]: value });
+  };
+
   render() {
     return (
-      <form onSubmit={() => this.props.onleaveSubmit()}>
+      <form onSubmit={this.handleSubmit}>
         <div className="mb-3">
           <label htmlFor="exampleFormControlInput1" className="form-label">
             Name
@@ -14,6 +28,7 @@ export class ContactForm extends Component {
             required
             className="form-control"
             id="exampleFormControlInput1"
+            onChange={this.handleChange}
           />
         </div>
         <div className="mb-3">
@@ -26,6 +41,7 @@ export class ContactForm extends Component {
             required
             className="form-control"
             id="exampleFormControlInput2"
+            onChange={this.handleChange}
           />
         </div>
 
@@ -36,16 +52,3 @@ export class ContactForm extends Component {
     );
   }
 }
-
-//   <section className="statistics">
-//     {title && <h2 className="title">{title}</h2>}
-
-//     <ul className="stat-list">
-//       {stats.map(stat => (
-//         <li id={stat.id} className="item">
-//           <span className="label">{stat.label}</span>
-//           <span className="percentage">{stat.percentage}</span>
-//         </li>
-//       ))}
-//     </ul>
-//   </section>
